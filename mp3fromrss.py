@@ -6,20 +6,19 @@ class Mp3FromRSSDownloader():
     def __init__(self, parentDaemon, episodesDirectory):
         self.parentDaemon = parentDaemon
         self.episodesDirectory = episodesDirectory
-        self.name = 'unnamed'
-    
+
     def run(self):
-        self.parentDaemon.message(self.name + ' Downloader start working')
+        self.parentDaemon.message('%s downloader start working' % self._getName())
 
         episodes = self._getDownloadedEpisodesList()
         episode = self._getLastDownloadedEpisodeName(episodes)
-        
-        self.parentDaemon.message('Last downloaded episode: "' + episode + '"')
+
+        self.parentDaemon.message('Last downloaded episode: "%s"' % episode)
         self._downloadAllEpisodeFrom(episode)
 
     def _getDownloadedEpisodesList(self):
         files = os.listdir(self.episodesDirectory)
-        results = [f[:len(f) - 4].lower() for f in files if os.path.isfile(self.episodesDirectory + '/' + f) and f.endswith('.mp3')]
+        results = [f[:len(f) - 4].lower() for f in files if os.path.isfile(os.path.join(self.episodesDirectory, f)) and f.endswith('.mp3')]
         return results
 
     def _getLastDownloadedEpisodeName(self, episodes):
@@ -34,17 +33,19 @@ class Mp3FromRSSDownloader():
             return
 
         for link in links:
-            self.parentDaemon.message('Download file from link: ' + link)
+            self.parentDaemon.message('Download file from link: %s' % link)
             saveFilePath = self._getMP3SaveFilePath(link)
             urllib.urlretrieve(link, saveFilePath)
 
     def _getMP3SaveFilePath(self, link):
         raise "Not implemented _getMP3SaveFilePath method"
 
+    def _getName(self):
+        return "unnamed"
+
 import datetime
-		
+
 class FakeDaemonPrintingOnOut():
     def message(self, msg):
         date = datetime.datetime.now()
-        print '[' + date.strftime('%Y-%m-%d %H:%M:%S') + '] ' + msg
-
+        print '[%s] %s' % (date.strftime('%Y-%m-%d %H:%M:%S'), msg)
