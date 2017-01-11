@@ -3,18 +3,22 @@
 import urllib, os
 
 class Mp3FromRSSDownloader():
-    def __init__(self, parentDaemon, episodesDirectory):
-        self.parentDaemon = parentDaemon
+    def __init__(self, logger, episodesDirectory):
+        self.logger = logger
         self.episodesDirectory = episodesDirectory
 
     def run(self):
-        self.parentDaemon.message('%s downloader start working' % self._getName())
+        self.logger.message('%s downloader start working' % self._getName())
 
         episodes = self._getDownloadedEpisodesList()
         episode = self._getLastDownloadedEpisodeName(episodes)
 
-        self.parentDaemon.message('Last downloaded episode: "%s"' % episode)
-        self._downloadAllEpisodeFrom(episode)
+        if episode == None:
+            self.logger.message('No downloaded episodes in given directory')
+
+        else:
+            self.logger.message('Last downloaded episode: "%s"' % episode)
+            self._downloadAllEpisodeFrom(episode)
 
     def _getDownloadedEpisodesList(self):
         files = os.listdir(self.episodesDirectory)
@@ -23,17 +27,21 @@ class Mp3FromRSSDownloader():
 
     def _getLastDownloadedEpisodeName(self, episodes):
         episodes.sort()
-        return episodes[-1].lower()
+
+        if len(episodes) > 0:
+            return episodes[-1].lower()
+        else:
+            return None
 
     def _downloadAllEpisodeFrom(self, lastDownloadedEpisode):
         links = self._findAllNewEpisodes(lastDownloadedEpisode)
 
         if (len(links) == 0):
-            self.parentDaemon.message('No new episodes')
+            self.logger.message('No new episodes')
             return
 
         for link in links:
-            self.parentDaemon.message('Download file from link: %s' % link)
+            self.logger.message('Download file from link: %s' % link)
             saveFilePath = self._getMP3SaveFilePath(link)
             urllib.urlretrieve(link, saveFilePath)
 
