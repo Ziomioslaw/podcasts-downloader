@@ -15,7 +15,7 @@ class Mp3FromRSSDownloader():
 
         if episode == None:
             self.logger.message('No downloaded episodes in given directory')
-
+            self._downloadLastEpisode()
         else:
             self.logger.message('Last downloaded episode: "%s"' % episode)
             self._downloadAllEpisodeFrom(episode)
@@ -33,13 +33,20 @@ class Mp3FromRSSDownloader():
         else:
             return None
 
+    def _downloadLastEpisode(self):
+        link = next( self._getNextEpisode(self.MainRSSLink))
+        self._downloadListedEpisodes([link])
+
     def _downloadAllEpisodeFrom(self, lastDownloadedEpisode):
         links = self._findAllNewEpisodes(lastDownloadedEpisode)
 
-        if (len(links) == 0):
+        if len(links) == 0:
             self.logger.message('No new episodes')
             return
 
+        self._downloadListedEpisodes(links)
+
+    def _downloadListedEpisodes(self, links):
         for link in links:
             self.logger.message('Download file from link: %s' % link)
             saveFilePath = self._getMP3SaveFilePath(link)
