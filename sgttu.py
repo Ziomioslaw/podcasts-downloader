@@ -17,9 +17,12 @@ class SGTTUDownloader(Mp3FromRSSDownloader):
             yield link
 
     def _findAllNewEpisodes(self, lastDownloadedEpisode):
+        results = []
         for link in self._getNextEpisode(self.MainRSSLink):
             if lastDownloadedEpisode in link:
                 return results
+
+            results.append(link)
 
         return results
 
