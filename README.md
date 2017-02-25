@@ -9,6 +9,7 @@ Give the script place for placed mp3 (a path to directory). On every run the scr
 # The list of implemented podcasts
 
 * [The Skeptics Guide to the Universe](http://www.theskepticsguide.org/)
+* [Niezatapialni](http://www.niezatapialni.pl/)
 
 # Using
 
@@ -21,6 +22,8 @@ from sgtu import SGTUDownloader
 
 logger = FakeDaemonPrintingOnOut()
 sgtu = SGTUDownloader(logger, '/place-where-you-store-SGTTU')
-
 sgtu.run()
+
+niezatapialni = Niezatapialni(logger, '/place-where-you-store-Niezatapialni')
+niezatapialni.run()
 ```
