@@ -5,36 +5,26 @@ import urllib, os
 class Mp3FromRSSDownloader():
     def __init__(self, logger, episodesDirectory):
         self.logger = logger
-        self.episodesDirectory = episodesDirectory
+        self.episodesManager =  DownloadedEpisodesManager(episodesDirectory)
 
     def run(self):
-        self.logger.message('%s downloader start working' % self._getName())
+        name = self._getName()
 
-        episodes = self._getDownloadedEpisodesList()
-        episode = self._getLastDownloadedEpisodeName(episodes)
+        self.logger.message('%s downloader start working' % name)
 
-        if episode == None:
+        lastEpisode = self.episodesManager.getLastDownloadedEpisodeName()
+        if lastEpisode == None:
             self.logger.message('No downloaded episodes in given directory')
             self._downloadLastEpisode()
         else:
-            self.logger.message('Last downloaded episode: "%s"' % episode)
-            self._downloadAllEpisodeFrom(episode)
+            self.logger.message('Last downloaded episode: "%s"' % lastEpisode)
+            self._downloadAllEpisodeFrom(lastEpisode)
 
-    def _getDownloadedEpisodesList(self):
-        files = os.listdir(self.episodesDirectory)
-        results = [f[:len(f) - 4].lower() for f in files if os.path.isfile(os.path.join(self.episodesDirectory, f)) and f.endswith('.mp3')]
-        return results
-
-    def _getLastDownloadedEpisodeName(self, episodes):
-        episodes.sort()
-
-        if len(episodes) > 0:
-            return episodes[-1].lower()
-        else:
-            return None
+        self.logger.message('%s downloader finished' % name)
 
     def _downloadLastEpisode(self):
-        link = next( self._getNextEpisode(self.MainRSSLink))
+        link = next(self._getNextEpisode())
+
         self._downloadListedEpisodes([link])
 
     def _downloadAllEpisodeFrom(self, lastDownloadedEpisode):
@@ -48,15 +38,42 @@ class Mp3FromRSSDownloader():
 
     def _downloadListedEpisodes(self, links):
         for link in links:
-            self.logger.message('Download file from link: %s' % link)
-            saveFilePath = self._getMP3SaveFilePath(link)
+            fileName = self._createForLink(link)
+            saveFilePath = self.episodesManager.getFullPathForFile(fileName)
+
+            self.logger.message('Download file from link "%s" to "%s"' % (link, saveFilePath))
             urllib.urlretrieve(link, saveFilePath)
 
-    def _getMP3SaveFilePath(self, link):
-        raise "Not implemented _getMP3SaveFilePath method"
+    def _createForLink(self, link):
+        raise "Not implemented"
 
     def _getName(self):
-        return "unnamed"
+        return "Unnamed"
+
+class DownloadedEpisodesManager():
+    def __init__(self, episodesDirectory):
+        self.episodesDirectory = episodesDirectory
+
+    def getPath(self):
+        return self.episodesDirectory
+
+    def getLastDownloadedEpisodeName(self):
+        episodes = self.getDownloadedEpisodesList()
+        episodes.sort()
+
+        if len(episodes) > 0:
+            return episodes[-1].lower()
+        else:
+            return None
+
+    def getDownloadedEpisodesList(self):
+        files = os.listdir(self.episodesDirectory)
+        results = [f[:len(f) - 4].lower() for f in files if os.path.isfile(os.path.join(self.episodesDirectory, f)) and f.endswith('.mp3')]
+
+        return results
+
+    def getFullPathForFile(self, fileName):
+        return os.path.join(self.episodesDirectory, fileName)
 
 import datetime
 
