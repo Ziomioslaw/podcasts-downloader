@@ -18,11 +18,11 @@ You can use code like this one:
 ```python
 #!/usr/bin/python
 from mp3fromrss import FakeDaemonPrintingOnOut
-from sgtu import SGTUDownloader
+from sgtu import SGTTU
 
 logger = FakeDaemonPrintingOnOut()
-sgtu = SGTUDownloader(logger, '/place-where-you-store-SGTTU')
-sgtu.run()
+sgttu = SGTTU(logger, '/place-where-you-store-SGTTU')
+sgttu.run()
 
 niezatapialni = Niezatapialni(logger, '/place-where-you-store-Niezatapialni')
 niezatapialni.run()

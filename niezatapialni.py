@@ -1,8 +1,21 @@
 import feedparser
-from datetime import datetime
 from mp3fromrss import Mp3FromRSSDownloader
+from mp3fromrss import FindAndDownloadMissing
+from mp3fromrss import DownloadedEpisodesManager
 
-class Niezatapialni(Mp3FromRSSDownloader):
+class Niezatapialni(FindAndDownloadMissing):
+    def __init__(self, logger, path):
+        FindAndDownloadMissing.__init__(
+            self,
+            logger,
+            DownloadedEpisodesManager(path),
+            NiezatapialniDownloader(logger)
+        )
+
+    def _getName(self):
+        return "Niezatapialni"
+
+class NiezatapialniDownloader(Mp3FromRSSDownloader):
     MainRSSLink = 'http://niezatapialni.com/?feed=rss2'
     DownloadServerDirectory = 'http://www.niezatapialni.com/podcast/'
     FilePrefixSize = 11 # File has additional prefix: '[YYYYMMDD] '
@@ -32,5 +45,3 @@ class Niezatapialni(Mp3FromRSSDownloader):
         onlyFileName = link.rpartition('/')[-1]
         return '[%s] %s' % (datetime.now().strftime('%Y%m%d'), onlyFileName)
 
-    def _getName(self):
-        return "Niezatapialni"

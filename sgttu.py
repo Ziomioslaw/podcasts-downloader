@@ -1,5 +1,19 @@
 import feedparser
 from mp3fromrss import Mp3FromRSSDownloader
+from mp3fromrss import FindAndDownloadMissing
+from mp3fromrss import DownloadedEpisodesManager
+
+class SGTTU(FindAndDownloadMissing):
+    def __init__(self, logger, path):
+        FindAndDownloadMissing.__init__(
+            self,
+            logger,
+            DownloadedEpisodesManager(path),
+            SGTTUDownloader(logger)
+        )
+
+    def _getName(self):
+        return "SGTTU"
 
 class SGTTUDownloader(Mp3FromRSSDownloader):
     MainRSSLink = 'http://www.theskepticsguide.org/feed/rss.aspx'
@@ -26,5 +40,3 @@ class SGTTUDownloader(Mp3FromRSSDownloader):
     def _createForLink(self, link):
         return link[len(self.DownloadServerDirectory):]
 
-    def _getName(self):
-        return "SGTTU"

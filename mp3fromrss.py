@@ -2,10 +2,11 @@
 
 import urllib, os
 
-class Mp3FromRSSDownloader():
-    def __init__(self, logger, episodesDirectory):
+class FindAndDownloadMissing():
+    def __init__(self, logger, episodesManager, downloader):
         self.logger = logger
-        self.episodesManager =  DownloadedEpisodesManager(episodesDirectory)
+        self.episodesManager = episodesManager
+        self.downloader = downloader
 
     def run(self):
         name = self._getName()
@@ -15,19 +16,26 @@ class Mp3FromRSSDownloader():
         lastEpisode = self.episodesManager.getLastDownloadedEpisodeName()
         if lastEpisode == None:
             self.logger.message('No downloaded episodes in given directory')
-            self._downloadLastEpisode()
+            self.downloader.downloadLastEpisode()
         else:
             self.logger.message('Last downloaded episode: "%s"' % lastEpisode)
-            self._downloadAllEpisodeFrom(lastEpisode)
+            self.downloader.downloadAllEpisodeFrom(lastEpisode)
 
         self.logger.message('%s downloader finished' % name)
 
-    def _downloadLastEpisode(self):
+    def _getName(self):
+        return "Unnamed"
+
+class Mp3FromRSSDownloader():
+    def __init__(self, logger):
+        self.logger = logger
+
+    def downloadLastEpisode(self):
         link = next(self._getNextEpisode())
 
         self._downloadListedEpisodes([link])
 
-    def _downloadAllEpisodeFrom(self, lastDownloadedEpisode):
+    def downloadAllEpisodeFrom(self, lastDownloadedEpisode):
         links = self._findAllNewEpisodes(lastDownloadedEpisode)
 
         if len(links) == 0:
@@ -46,9 +54,6 @@ class Mp3FromRSSDownloader():
 
     def _createForLink(self, link):
         raise "Not implemented"
-
-    def _getName(self):
-        return "Unnamed"
 
 class DownloadedEpisodesManager():
     def __init__(self, episodesDirectory):
