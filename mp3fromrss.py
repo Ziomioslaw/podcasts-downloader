@@ -16,10 +16,10 @@ class FindAndDownloadMissing():
         lastEpisode = self.episodesManager.getLastDownloadedEpisodeName()
         if lastEpisode == None:
             self.logger.message('No downloaded episodes in given directory')
-            self.downloader.downloadLastEpisode()
+            self.downloader.downloadLastEpisode(self.episodesManager)
         else:
             self.logger.message('Last downloaded episode: "%s"' % lastEpisode)
-            self.downloader.downloadAllEpisodeFrom(lastEpisode)
+            self.downloader.downloadAllEpisodeFrom(lastEpisode, self.episodesManager)
 
         self.logger.message('%s downloader finished' % name)
 
@@ -30,24 +30,24 @@ class Mp3FromRSSDownloader():
     def __init__(self, logger):
         self.logger = logger
 
-    def downloadLastEpisode(self):
+    def downloadLastEpisode(self, episodesManager):
         link = next(self._getNextEpisode())
 
-        self._downloadListedEpisodes([link])
+        self._downloadListedEpisodes([link], episodesManager)
 
-    def downloadAllEpisodeFrom(self, lastDownloadedEpisode):
+    def downloadAllEpisodeFrom(self, lastDownloadedEpisode, episodesManager):
         links = self._findAllNewEpisodes(lastDownloadedEpisode)
 
         if len(links) == 0:
             self.logger.message('No new episodes')
             return
 
-        self._downloadListedEpisodes(links)
+        self._downloadListedEpisodes(links, episodesManager)
 
-    def _downloadListedEpisodes(self, links):
+    def _downloadListedEpisodes(self, links, episodesManager):
         for link in links:
             fileName = self._createForLink(link)
-            saveFilePath = self.episodesManager.getFullPathForFile(fileName)
+            saveFilePath = episodesManager.getFullPathForFile(fileName)
 
             self.logger.message('Download file from link "%s" to "%s"' % (link, saveFilePath))
             urllib.urlretrieve(link, saveFilePath)
