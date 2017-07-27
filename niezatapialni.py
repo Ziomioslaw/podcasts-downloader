@@ -1,4 +1,6 @@
 import feedparser
+import datetime
+
 from mp3fromrss import Mp3FromRSSDownloader
 from mp3fromrss import FindAndDownloadMissing
 from mp3fromrss import DownloadedEpisodesManager
@@ -43,5 +45,5 @@ class NiezatapialniDownloader(Mp3FromRSSDownloader):
 
     def _createForLink(self, link):
         onlyFileName = link.rpartition('/')[-1]
-        return '[%s] %s' % (datetime.now().strftime('%Y%m%d'), onlyFileName)
+        return '[%s] %s' % (datetime.datetime.now().strftime('%Y%m%d'), onlyFileName)
 
