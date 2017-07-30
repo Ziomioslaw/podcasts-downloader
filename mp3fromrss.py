@@ -31,29 +31,41 @@ class Mp3FromRSSDownloader():
         self.logger = logger
 
     def downloadLastEpisode(self, episodesManager):
-        link = next(self._getNextEpisode())
+        episode = next(self._getNextEpisode())
 
-        self._downloadListedEpisodes([link], episodesManager)
+        self._downloadListedEpisodes([episode], episodesManager)
 
     def downloadAllEpisodeFrom(self, lastDownloadedEpisode, episodesManager):
-        links = self._findAllNewEpisodes(lastDownloadedEpisode)
+        episodes = self._findAllNewEpisodes(lastDownloadedEpisode)
 
-        if len(links) == 0:
+        if len(episodes) == 0:
             self.logger.message('No new episodes')
             return
 
-        self._downloadListedEpisodes(links, episodesManager)
+        self._downloadListedEpisodes(episodes, episodesManager)
 
-    def _downloadListedEpisodes(self, links, episodesManager):
-        for link in links:
-            fileName = self._createForLink(link)
+    def _downloadListedEpisodes(self, episodes, episodesManager):
+        for episode in episodes:
+            fileName = self._createForLink(episode.getLink())
             saveFilePath = episodesManager.getFullPathForFile(fileName)
+            link = episode.getLink()
 
             self.logger.message('Download file from link "%s" to "%s"' % (link, saveFilePath))
             urllib.urlretrieve(link, saveFilePath)
 
     def _createForLink(self, link):
         raise "Not implemented"
+
+class Episode():
+    def __init__(self, publishDate, link):
+        self.link = link
+        self.publishDate = publishDate
+
+    def getLink(self):
+        return self.link
+
+    def getPublishDate(self):
+        return self.publishDate
 
 class DownloadedEpisodesManager():
     def __init__(self, episodesDirectory):

@@ -1,9 +1,10 @@
 import feedparser
-import datetime
+from datetime import datetime
 
 from mp3fromrss import Mp3FromRSSDownloader
 from mp3fromrss import FindAndDownloadMissing
 from mp3fromrss import DownloadedEpisodesManager
+from mp3fromrss import Episode
 
 class Niezatapialni(FindAndDownloadMissing):
     def __init__(self, logger, path):
@@ -28,14 +29,15 @@ class NiezatapialniDownloader(Mp3FromRSSDownloader):
         for item in items:
             links = item['links']
             if (len(links) > 1):
-                yield item['links'][1]['href']
+                publishedDate = datetime.strptime(item['published'][:-6], '%a, %d %b %Y %H:%M:%S')
+                yield Episode(publishedDate, item['links'][1]['href'])
 
     def _findAllNewEpisodes(self, lastDownloadedEpisode):
         cleanEpisodeName = lastDownloadedEpisode[self.FilePrefixSize:].lower()
 
         results = []
         for link in self._getNextEpisode():
-            href = link.lower()
+            href = link.getLink().lower()
             if cleanEpisodeName in href:
                 return results
 
@@ -45,5 +47,4 @@ class NiezatapialniDownloader(Mp3FromRSSDownloader):
 
     def _createForLink(self, link):
         onlyFileName = link.rpartition('/')[-1]
-        return '[%s] %s' % (datetime.datetime.now().strftime('%Y%m%d'), onlyFileName)
-
+        return '[%s] %s' % (datetime.now().strftime('%Y%m%d'), onlyFileName)

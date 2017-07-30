@@ -1,7 +1,10 @@
 import feedparser
+from datetime import datetime
+
 from mp3fromrss import Mp3FromRSSDownloader
 from mp3fromrss import FindAndDownloadMissing
 from mp3fromrss import DownloadedEpisodesManager
+from mp3fromrss import Episode
 
 class SGTTU(FindAndDownloadMissing):
     def __init__(self, logger, path):
@@ -24,16 +27,17 @@ class SGTTUDownloader(Mp3FromRSSDownloader):
         items = feed['items']
 
         for item in items:
+            publishedDate = datetime.strptime(item['published'][:-6], '%a, %d %b %Y %H:%M:%S')
             link = item['links'][0]['href']
-            yield link
+            yield Episode(publishedDate, link)
 
     def _findAllNewEpisodes(self, lastDownloadedEpisode):
         results = []
-        for link in self._getNextEpisode():
-            if lastDownloadedEpisode in link:
+        for episode in self._getNextEpisode():
+            if lastDownloadedEpisode in episode.getLink():
                 return results
 
-            results.append(link)
+            results.append(episode)
 
         return results
 
