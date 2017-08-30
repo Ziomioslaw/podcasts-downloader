@@ -28,7 +28,7 @@ class NiezatapialniDownloader(Mp3FromRSSDownloader):
         items = feed['items']
         for item in items:
             links = item['links']
-            if (len(links) > 1):
+            if len(links) > 1:
                 publishedDate = datetime.strptime(item['published'][:-6], '%a, %d %b %Y %H:%M:%S')
                 yield Episode(publishedDate, item['links'][1]['href'])
 
@@ -45,6 +45,6 @@ class NiezatapialniDownloader(Mp3FromRSSDownloader):
 
         return results
 
-    def _createForLink(self, link):
-        onlyFileName = link.rpartition('/')[-1]
-        return '[%s] %s' % (datetime.now().strftime('%Y%m%d'), onlyFileName)
+    def _createForLink(self, episode):
+        onlyFileName = episode.getLink().rpartition('/')[-1]
+        return '[%s] %s' % (episode.getPublishDate().strftime('%Y%m%d'), onlyFileName)

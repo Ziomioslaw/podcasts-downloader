@@ -41,6 +41,6 @@ class SGTTUDownloader(Mp3FromRSSDownloader):
 
         return results
 
-    def _createForLink(self, link):
-        return link[len(self.DownloadServerDirectory):]
+    def _createForLink(self, episode):
+        return episode.getLink()[len(self.DownloadServerDirectory):]
 

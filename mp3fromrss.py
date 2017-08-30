@@ -46,7 +46,7 @@ class Mp3FromRSSDownloader():
 
     def _downloadListedEpisodes(self, episodes, episodesManager):
         for episode in episodes:
-            fileName = self._createForLink(episode.getLink())
+            fileName = self._createForLink(episode)
             saveFilePath = episodesManager.getFullPathForFile(fileName)
             link = episode.getLink()
 
