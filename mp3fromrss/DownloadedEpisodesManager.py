@@ -1,4 +1,4 @@
-import urllib, os
+import os
 
 class DownloadedEpisodesManager():
     def __init__(self, episodesDirectory):

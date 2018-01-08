@@ -1,6 +1,13 @@
+import urllib
+
+class Downloader():
+    def run(fromLink, toPath):
+        urllib.urlretrieve(link, saveFilePath)
+
 class Mp3FromRSSDownloader():
-    def __init__(self, logger):
+    def __init__(self, logger, downloader):
         self.logger = logger
+        self.downloader = downloader
 
     def downloadLastEpisode(self, episodesManager):
         episode = next(self._getNextEpisode())
@@ -23,7 +30,8 @@ class Mp3FromRSSDownloader():
             link = episode.getLink()
 
             self.logger.message('Download file from link "%s" to "%s"' % (link, saveFilePath))
-            urllib.urlretrieve(link, saveFilePath)
+            self.downloader.run(link, saveFilePath)
 
     def _createForLink(self, link):
         raise "Not implemented"
+
