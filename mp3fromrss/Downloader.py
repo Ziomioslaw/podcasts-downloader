@@ -1,5 +1,5 @@
 import urllib
 
 class Downloader():
-    def run(fromLink, toPath):
-        urllib.urlretrieve(link, saveFilePath)
+    def run(self, fromLink, toPath):
+        urllib.urlretrieve(fromLink, toPath)
