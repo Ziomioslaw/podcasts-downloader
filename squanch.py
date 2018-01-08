@@ -5,6 +5,7 @@ from mp3fromrss import Mp3FromRSSDownloader
 from mp3fromrss import FindAndDownloadMissing
 from mp3fromrss import DownloadedEpisodesManager
 from mp3fromrss import Episode
+from mp3fromrss import Downloader
 
 class Squanch(FindAndDownloadMissing):
     def __init__(self, logger, path):
@@ -12,7 +13,7 @@ class Squanch(FindAndDownloadMissing):
             self,
             logger,
             DownloadedEpisodesManager(path),
-            SquanchDownloader(logger)
+            SquanchDownloader(logger, Downloader())
         )
 
     def _getName(self):
@@ -46,5 +47,7 @@ class SquanchDownloader(Mp3FromRSSDownloader):
         return results
 
     def _createForLink(self, episode):
-        onlyFileName = episode.getLink().rpartition('/')[-1]
+        onlyFileNameWithParamaters = episode.getLink().rpartition('/')[-1]
+        onlyFileName = onlyFileNameWithParamaters.rpartition('?')[0]
+
         return '[%s] %s' % (episode.getPublishDate().strftime('%Y%m%d'), onlyFileName)

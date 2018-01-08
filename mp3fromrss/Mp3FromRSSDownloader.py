@@ -1,9 +1,3 @@
-import urllib
-
-class Downloader():
-    def run(fromLink, toPath):
-        urllib.urlretrieve(link, saveFilePath)
-
 class Mp3FromRSSDownloader():
     def __init__(self, logger, downloader):
         self.logger = logger
