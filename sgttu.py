@@ -4,6 +4,7 @@ from datetime import datetime
 from mp3fromrss import Mp3FromRSSDownloader
 from mp3fromrss import FindAndDownloadMissing
 from mp3fromrss import DownloadedEpisodesManager
+from mp3fromrss import Downloader
 from mp3fromrss import Episode
 
 class SGTTU(FindAndDownloadMissing):
@@ -12,7 +13,7 @@ class SGTTU(FindAndDownloadMissing):
             self,
             logger,
             DownloadedEpisodesManager(path),
-            SGTTUDownloader(logger)
+            SGTTUDownloader(logger, Downloader())
         )
 
     def _getName(self):
