@@ -37,9 +37,14 @@ class FindAndDownloadMissing():
 
     def __getAllNewEpisodesList(self, lastDownloadedEpisode):
         results = []
+
+        print(next(self.feedReader.getNextEpisode()))
+
         for episode in self.feedReader.getNextEpisode():
             episodeName = self.fileNameManager.getNameForEpisode(episode)
+            print(episode, episodeName)
 
+            print(lastDownloadedEpisode, episodeName, lastDownloadedEpisode in episodeName)
             if lastDownloadedEpisode in episodeName:
                 return results
 

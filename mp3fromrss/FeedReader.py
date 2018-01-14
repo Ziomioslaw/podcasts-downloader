@@ -17,8 +17,8 @@ class FeedReader():
     def _parseItem(self, item):
         links = item['links']
 
-        if len(links) > 1:
+        if len(links) > 0:
             publishedDate = datetime.strptime(item['published'][:-6], '%a, %d %b %Y %H:%M:%S')
-            return Episode(publishedDate, item['links'][1]['href'])
+            return Episode(publishedDate, item['links'][0]['href'])
 
         return None
