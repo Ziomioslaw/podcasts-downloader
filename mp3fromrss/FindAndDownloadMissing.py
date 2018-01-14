@@ -1,12 +1,13 @@
 class FindAndDownloadMissing():
-    def __init__(self, logger, episodesManager, downloader, feedReader):
+    def __init__(self, logger, episodesManager, downloader, feedReader, fileNameManager):
         self.logger = logger
         self.episodesManager = episodesManager
         self.downloader = downloader
         self.feedReader = feedReader
+        self.fileNameManager = fileNameManager
 
     def run(self):
-        name = self._getName()
+        name = self.getName()
 
         self.logger.message('%s downloader start working' % name)
 
@@ -37,7 +38,9 @@ class FindAndDownloadMissing():
     def __getAllNewEpisodesList(self, lastDownloadedEpisode):
         results = []
         for episode in self.feedReader.getNextEpisode():
-            if lastDownloadedEpisode in episode.getLink():
+            episodeName = self.fileNameManager.getNameForEpisode(episode)
+
+            if lastDownloadedEpisode in episodeName:
                 return results
 
             results.append(episode)
@@ -46,12 +49,12 @@ class FindAndDownloadMissing():
 
     def __downloadListedEpisodes(self, episodes):
         for episode in episodes:
-            fileName = self._createForLink(episode)
-            saveFilePath = episodesManager.getFullPathForFile(fileName)
+            fileName = self.fileNameManager.getNameForEpisode(episode)
+            saveFilePath = self.episodesManager.getFullPathForFile(fileName)
             link = episode.getLink()
 
             self.logger.message('Download file from link "%s" to "%s"' % (link, saveFilePath))
             self.downloader.run(link, saveFilePath)
 
-    def _getName(self):
+    def getName(self):
         return "Unnamed"

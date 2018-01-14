@@ -1,20 +1,12 @@
 from mp3fromrss import FindAndDownloadMissing
-from mp3fromrss import DownloadedEpisodesManager
-from mp3fromrss import WithDateOnBeginingDownloader
-from mp3fromrss import Downloader
+from mp3fromrss import FileNameWithDateOnBegining
 
 class Squanch(FindAndDownloadMissing):
-    def __init__(self, logger, path):
-        FindAndDownloadMissing.__init__(
-            self,
-            logger,
-            DownloadedEpisodesManager(path),
-            WithDateOnBeginingDownloader(
-                logger,
-                'http://squanch.libsyn.com/rss',
-                Downloader()
-            )
-        )
+    MainRSSLink = 'http://squanch.libsyn.com/rss'
+    FileNameManager = FileNameWithDateOnBegining()
 
-    def _getName(self):
+    def getRSSLink(self):
+        return self.MainRSSLink
+
+    def getName(self):
         return "Squanch"
