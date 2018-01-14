@@ -19,17 +19,12 @@ You can use code like this one:
 ```python
 #!/usr/bin/python
 from logger import PrintingOnOut
-from sgtu import SGTTU
-from squanch import Squanch
+from builder import Builder
 
 logger = PrintingOnOut()
+builder = Builder(logger)
 
-sgttu = SGTTU(logger, '/place-where-you-store-SGTTU')
-sgttu.run()
-
-niezatapialni = Niezatapialni(logger, '/place-where-you-store-Niezatapialni')
-niezatapialni.run()
-
-squanch = Squanch(logger, '/place-where-you-store-Squanch')
-squanch.run()
+builder.build('SGTTU', '/place-where-you-store-SGTTU').run()
+builder.build('Niezatapialni', '/place-where-you-store-Niezatapialni').run()
+builder.build('Squanch', '/place-where-you-store-Squanch').run()
 ```
