@@ -16,7 +16,7 @@ class FindAndDownloadMissing():
             self.logger.message('No downloaded episodes in given directory')
             self.downloadLastEpisode(self.episodesManager)
         else:
-            self.logger.message('Last downloaded episode: "%s"' % lastEpisode)
+            self.logger.message('Last downloaded episode: "\033[97m%s\033[0m"' % lastEpisode)
             self.downloadAllEpisodeFrom(lastEpisode)
 
         self.logger.message('%s downloader finished' % name)
@@ -54,7 +54,7 @@ class FindAndDownloadMissing():
             saveFilePath = self.episodesManager.getFullPathForFile(fileName)
             link = episode.getLink()
 
-            self.logger.message('Download file from link "%s" to "%s"' % (link, saveFilePath))
+            self.logger.message('Download file from link "\033[97m%s\033[0m" to "\033[97m%s\033[0m"' % (link, saveFilePath))
             self.downloader.run(link, saveFilePath)
 
     def getName(self):
