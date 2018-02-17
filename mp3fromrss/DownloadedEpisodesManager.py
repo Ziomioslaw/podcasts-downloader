@@ -7,8 +7,8 @@ class DownloadedEpisodesManager():
     def getPath(self):
         return self.episodesDirectory
 
-    def getLastDownloadedEpisodeName(self):
-        episodes = self.getDownloadedEpisodesList()
+    async def getLastDownloadedEpisodeName(self):
+        episodes = await self.getDownloadedEpisodesList()
         episodes.sort()
 
         if len(episodes) > 0:
@@ -16,7 +16,7 @@ class DownloadedEpisodesManager():
         else:
             return None
 
-    def getDownloadedEpisodesList(self):
+    async def getDownloadedEpisodesList(self):
         files = os.listdir(self.episodesDirectory)
         results = [f[:len(f) - 4].lower() for f in files if os.path.isfile(os.path.join(self.episodesDirectory, f)) and f.endswith('.mp3')]
 

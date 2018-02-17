@@ -19,12 +19,14 @@ You can use code like this one:
 ```python
 #!/usr/bin/python
 from logger import PrintingOnOut
-from builder import Builder
+from runner import Runner
 
 logger = PrintingOnOut()
-builder = Builder(logger)
+builder = Runner(logger)
 
-builder.build('SGTTU', '/place-where-you-store-SGTTU').run()
-builder.build('Niezatapialni', '/place-where-you-store-Niezatapialni').run()
-builder.build('Squanch', '/place-where-you-store-Squanch').run()
+runner = Runner(logger)
+runner.add('SGTTU', '/place-where-you-store-SGTTU')
+runner.add('Niezatapialni', '/place-where-you-store-Niezatapialni')
+runner.add('Squanch', '/place-where-you-store-Squanch')
+runner.run()
 ```

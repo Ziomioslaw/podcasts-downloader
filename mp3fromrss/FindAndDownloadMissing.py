@@ -11,22 +11,22 @@ class FindAndDownloadMissing():
 
         self.logger.message('{} downloader start working', name)
 
-        lastEpisode = self.episodesManager.getLastDownloadedEpisodeName()
+        lastEpisode = await self.episodesManager.getLastDownloadedEpisodeName()
         if lastEpisode == None:
             self.logger.message('No downloaded episodes in given directory')
-            self.downloadLastEpisode(self.episodesManager)
+            await self.downloadLastEpisode(self.episodesManager)
         else:
             self.logger.message('Last downloaded episode: "{}"', lastEpisode)
-            self.downloadAllEpisodeFrom(lastEpisode)
+            await self.downloadAllEpisodeFrom(lastEpisode)
 
         self.logger.message('{} downloader finished', name)
 
-    def downloadLastEpisode(self):
+    async def downloadLastEpisode(self):
         episode = next(self.feedReader.getNextEpisode())
 
         self.__downloadListedEpisodes([episode])
 
-    def downloadAllEpisodeFrom(self, lastDownloadedEpisode):
+    async def downloadAllEpisodeFrom(self, lastDownloadedEpisode):
         episodes = self.__getAllNewEpisodesList(lastDownloadedEpisode)
 
         if len(episodes) == 0:
