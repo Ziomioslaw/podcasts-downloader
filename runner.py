@@ -1,3 +1,5 @@
+import asyncio
+
 from mp3fromrss import Downloader
 from mp3fromrss import DownloadedEpisodesManager
 from mp3fromrss import FeedReader
@@ -7,21 +9,26 @@ from niezatapialni import Niezatapialni
 from sgttu import SGTTU
 from squanch import Squanch
 
-class Builder():
+class Runner():
     def __init__(self, logger):
         self.logger = logger
         self.downloader = Downloader()
+        self.tasks = []
 
-    def build(self, podcastName, path):
+    def add(self, podcastName, path):
         podcast = globals()[podcastName]
-
-        return podcast(
+        self.tasks.append(podcast(
             self.logger,
             self.getDownloadedEpisodesManager(path),
             self.downloader,
             self.getFeedReader(podcast.MainRSSLink),
             podcast.FileNameManager
-        )
+        ).run())
+
+    def run(self):
+        loop = asyncio.get_event_loop()
+        loop.run_until_complete(asyncio.wait(self.tasks))
+        loop.close()
 
     def getDownloadedEpisodesManager(self, path):
         return DownloadedEpisodesManager(path)

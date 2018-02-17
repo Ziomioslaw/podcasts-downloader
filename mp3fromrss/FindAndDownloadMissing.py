@@ -6,7 +6,7 @@ class FindAndDownloadMissing():
         self.feedReader = feedReader
         self.fileNameManager = fileNameManager
 
-    def run(self):
+    async def run(self):
         name = self.getName()
 
         self.logger.message('{} downloader start working', name)
