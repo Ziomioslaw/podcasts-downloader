@@ -11,4 +11,4 @@ class PrintingOnOut():
             message = msg
 
         date = datetime.now()
-        print '[\033[2m{:%Y-%m-%d %H:%M:%S}\033[0m] {}'.format(date, message)
+        print('[\033[2m{:%Y-%m-%d %H:%M:%S}\033[0m] {}'.format(date, message))
