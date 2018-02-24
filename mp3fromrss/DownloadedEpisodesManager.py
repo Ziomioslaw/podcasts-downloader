@@ -11,10 +11,10 @@ class DownloadedEpisodesManager():
         episodes = await self.getDownloadedEpisodesList()
         episodes.sort()
 
-        if len(episodes) > 0:
+        if episodes:
             return episodes[-1].lower()
-        else:
-            return None
+
+        return None
 
     async def getDownloadedEpisodesList(self):
         files = os.listdir(self.episodesDirectory)

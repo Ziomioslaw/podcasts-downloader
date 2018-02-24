@@ -14,7 +14,7 @@ class FindAndDownloadMissing():
         lastEpisode = await self.episodesManager.getLastDownloadedEpisodeName()
         if lastEpisode == None:
             self.logger.message('No downloaded episodes in given directory')
-            await self.downloadLastEpisode(self.episodesManager)
+            await self.downloadLastEpisode()
         else:
             self.logger.message('Last downloaded episode: "{}"', lastEpisode)
             await self.downloadAllEpisodeFrom(lastEpisode)
