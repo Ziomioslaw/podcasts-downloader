@@ -5,10 +5,7 @@ from mp3fromrss import DownloadedEpisodesManager
 from mp3fromrss import FeedReader
 from mp3fromrss import LiveFeedSource
 
-from niezatapialni import Niezatapialni
-from sgttu import SGTTU
-from squanch import Squanch
-from smtm import SMTM
+from podcasts import *
 
 class Runner():
     def __init__(self, logger):
