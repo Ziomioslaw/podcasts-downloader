@@ -8,6 +8,7 @@ from mp3fromrss import LiveFeedSource
 from niezatapialni import Niezatapialni
 from sgttu import SGTTU
 from squanch import Squanch
+from smtm import SMTM
 
 class Runner():
     def __init__(self, logger):
