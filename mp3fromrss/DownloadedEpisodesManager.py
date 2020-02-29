@@ -18,7 +18,7 @@ class DownloadedEpisodesManager():
 
     async def getDownloadedEpisodesList(self):
         files = os.listdir(self.episodesDirectory)
-        results = [f[:len(f) - 4].lower() for f in files if os.path.isfile(os.path.join(self.episodesDirectory, f)) and f.endswith('.mp3')]
+        results = [f[:len(f) - 4].lower() for f in files if os.path.isfile(os.path.join(self.episodesDirectory, f)) and (f.endswith('.mp3') or f.endswith('.m4v'))]
 
         return results
 
